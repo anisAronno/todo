@@ -5,33 +5,38 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { Link } from "@inertiajs/vue3";
 
 defineProps({
-    tasks: Object,
+    projects: Object,
 });
 </script>
 
 <template>
-    <Head title="Task" />
+    <Head title="Project" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2
                 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
             >
-                Task
+                Project
             </h2>
         </template>
-
         <div class="sm:flex sm:items-center relative my-5">
             <div
                 class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none space-x-1 sm:space-x-2 space-y-2 sm:space-y-0 absolute right-5 top-1"
             >
                 <primary-button>
-                    <Link :href="route('task.create')" class="btn btn-primary">
+                    <Link
+                        :href="route('project.create')"
+                        class="btn btn-primary"
+                    >
                         Create New
                     </Link>
                 </primary-button>
                 <primary-button>
-                    <Link :href="route('task.index')" class="btn btn-primary">
+                    <Link
+                        :href="route('project.index')"
+                        class="btn btn-primary"
+                    >
                         View All
                     </Link>
                 </primary-button>
@@ -52,12 +57,6 @@ defineProps({
                                 >
                                     Name
                                 </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                >
-                                    Project
-                                </th>
                                 <!-- Add more table headers as needed -->
                                 <th
                                     scope="col"
@@ -68,30 +67,23 @@ defineProps({
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <template v-if="tasks.length === 0">
+                            <template v-if="projects.length === 0">
                                 <tr>
                                     <td
                                         class="px-6 py-4 text-sm text-gray-500"
-                                        colspan="3"
+                                        colspan="2"
                                     >
-                                        No tasks found.
+                                        No projects found.
                                     </td>
                                 </tr>
                             </template>
                             <template v-else>
-                                <tr v-for="task in tasks" :key="task.id">
+                                <tr
+                                    v-for="project in projects"
+                                    :key="project.id"
+                                >
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        {{ task.name }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <ul>
-                                            <li
-                                                v-for="project in task.projects"
-                                                :key="project.id"
-                                            >
-                                                {{ project?.name }}
-                                            </li>
-                                        </ul>
+                                        {{ project.name }}
                                     </td>
                                     <td
                                         class="px-6 py-4 whitespace-nowrap flex gap-3"
@@ -99,8 +91,8 @@ defineProps({
                                         <PrimaryButton>
                                             <a
                                                 :href="
-                                                    route('task.index', {
-                                                        taskId: task.id,
+                                                    route('project.index', {
+                                                        projectId: project.id,
                                                     })
                                                 "
                                                 class="text-indigo-600 hover:text-indigo-900"
@@ -111,18 +103,20 @@ defineProps({
                                         <PrimaryButton>
                                             <a
                                                 :href="
-                                                    route('task.edit', task.id)
+                                                    route(
+                                                        'project.edit',
+                                                        project.id
+                                                    )
                                                 "
                                                 class="text-blue-600 hover:text-blue-900 ml-2"
                                             >
                                                 Edit
                                             </a>
                                         </PrimaryButton>
-
                                         <DeleteForm
                                             :data="{
-                                                id: task.id,
-                                                model: 'task',
+                                                id: project.id,
+                                                model: 'project',
                                             }"
                                         ></DeleteForm>
                                     </td>

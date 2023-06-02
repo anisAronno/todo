@@ -5,62 +5,66 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->authorizeResource(Project::class, 'project');
+    }
+
     public function index()
     {
-        //
+        $user = Auth::user();
+
+        $projects = $user->projects;
+
+        return Inertia::render('Project/Index', [
+            'projects' => $projects,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return Inertia::render('Project/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreProjectRequest $request)
     {
-        //
+        $user = Auth::user();
+
+        $user->projects()->create($request->all());
+
+        return redirect()->route('projects.index')->with('status', 'Project created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Project $project)
     {
-        //
+        return Inertia::render('Project/Show', [
+            'project' => $project,
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Project $project)
     {
-        //
+        return Inertia::render('Project/Edit', [
+            'project' => $project,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        //
+        $project->update($request->all());
+
+        return redirect()->route('projects.index')->with('status', 'Project updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Project $project)
     {
-        //
+        $project->delete();
+
+        return redirect()->route('projects.index')->with('status', 'Project deleted successfully.');
     }
 }

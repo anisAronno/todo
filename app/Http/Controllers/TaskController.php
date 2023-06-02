@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
-use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class TaskController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Task::class, 'task');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -18,7 +22,7 @@ class TaskController extends Controller
     {
         $user = Auth::user();
 
-        $tasks = $user->tasks()->with('project')->get();
+        $tasks = $user->tasks()->with('projects')->get();
 
         return Inertia::render('Task/Index', [
             'tasks' => $tasks,
@@ -31,8 +35,9 @@ class TaskController extends Controller
      */
     public function create()
     {
+        $user = Auth::user();
 
-        $projects = Project::all();
+        $projects = $user->projects;
 
         return Inertia::render('Task/Create', [
             'projects' => $projects,
@@ -46,10 +51,16 @@ class TaskController extends Controller
     {
         $user = Auth::user();
 
-        $user->tasks()->create($request->all());
+        $taskData = $request->validated();
+        $taskData['user_id'] = $user->id;
 
-        return redirect()->route('tasks.index')->with('status', 'Task created successfully.');
+        $task = Task::create($taskData);
 
+        if ($request->filled('projects')) {
+            $task->projects()->attach($request->input('projects'));
+        }
+
+        return redirect()->route('task.index')->with('status', 'Task created successfully.');
     }
 
     /**
@@ -57,8 +68,10 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        return Inertia::render('Task/Create', [
-            'projects' => $task->load('projects'),
+        $task->load('projects');
+
+        return Inertia::render('Task/Show', [
+            'task' => $task,
         ]);
     }
 
@@ -67,10 +80,12 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        $projects = Project::all();
+        $user = Auth::user();
+
+        $projects = $user->projects;
 
         return Inertia::render('Task/Edit', [
-            'task' => $task->load('project'),
+            'task' => $task->load('projects'),
             'projects' => $projects,
         ]);
     }
@@ -80,9 +95,15 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        $task->update($request->all());
+        $task->update($request->validated());
 
-        return redirect()->route('tasks.index')->with('status', 'Task updated successfully.');
+        if ($request->filled('projects')) {
+            $task->projects()->sync($request->input('projects'));
+        } else {
+            $task->projects()->detach();
+        }
+
+        return redirect()->route('task.index')->with('status', 'Task updated successfully.');
     }
 
     /**
@@ -92,7 +113,6 @@ class TaskController extends Controller
     {
         $task->delete();
 
-        return redirect()->route('tasks.index')->with('status', 'Task deleted successfully.');
-
+        return redirect()->route('task.index')->with('status', 'Task deleted successfully.');
     }
 }

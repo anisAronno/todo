@@ -13,15 +13,17 @@ class TaskPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Task $task): bool
+    public function view(User $user, Task $task): Response
     {
-        //
+        return optional($user)->id === $task->user_id
+            ? Response::allow()
+            : Response::deny('You do not own this Task.');
     }
 
     /**
@@ -29,23 +31,27 @@ class TaskPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Task $task): bool
+    public function update(User $user, Task $task): Response
     {
-        //
+        return optional($user)->id === $task->user_id
+            ? Response::allow()
+            : Response::deny('You do not own this Task.');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Task $task): bool
+    public function delete(User $user, Task $task): Response
     {
-        //
+        return optional($user)->id === $task->user_id
+            ? Response::allow()
+            : Response::deny('You do not own this Task.');
     }
 
     /**
@@ -53,7 +59,7 @@ class TaskPolicy
      */
     public function restore(User $user, Task $task): bool
     {
-        //
+        return false;
     }
 
     /**
@@ -61,6 +67,6 @@ class TaskPolicy
      */
     public function forceDelete(User $user, Task $task): bool
     {
-        //
+        return false;
     }
 }
