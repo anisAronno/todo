@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreTaskRequest extends FormRequest
 {
@@ -23,7 +24,13 @@ class StoreTaskRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'priority' => 'required|integer',
+            'priority' => [
+                'required',
+                'integer',
+                Rule::unique('tasks')->where(function ($query) {
+                    return $query->where('user_id', auth()->user()->id);
+                }),
+            ],
             'project_id' => 'required|exists:projects,id',
         ];
     }

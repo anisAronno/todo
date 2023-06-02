@@ -22,7 +22,7 @@ class TaskController extends Controller
     {
         $user = Auth::user();
 
-        $tasks = $user->tasks()->with('projects')->get();
+        $tasks = $user->tasks()->with('project')->orderBy('priority', 'asc')->get();
 
         return Inertia::render('Task/Index', [
             'tasks' => $tasks,
@@ -49,16 +49,8 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        $user = Auth::user();
-
-        $taskData = $request->validated();
-        $taskData['user_id'] = $user->id;
-
-        $task = Task::create($taskData);
-
-        if ($request->filled('projects')) {
-            $task->projects()->attach($request->input('projects'));
-        }
+        $data = $request->only('name', 'priority', 'project_id');
+        $task = Task::create(array_merge(['user_id' => auth()->user()->id], $data));
 
         return redirect()->route('task.index')->with('status', 'Task created successfully.');
     }
@@ -85,7 +77,7 @@ class TaskController extends Controller
         $projects = $user->projects;
 
         return Inertia::render('Task/Edit', [
-            'task' => $task->load('projects'),
+            'task' => $task->load('project'),
             'projects' => $projects,
         ]);
     }
@@ -95,13 +87,7 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        $task->update($request->validated());
-
-        if ($request->filled('projects')) {
-            $task->projects()->sync($request->input('projects'));
-        } else {
-            $task->projects()->detach();
-        }
+        $task->update($request->only('name', 'priority', 'project_id'));
 
         return redirect()->route('task.index')->with('status', 'Task updated successfully.');
     }

@@ -21,28 +21,23 @@ defineProps({
             </h2>
         </template>
 
-        <div class="sm:flex sm:items-center relative my-5">
-            <div
-                class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none space-x-1 sm:space-x-2 space-y-2 sm:space-y-0 absolute right-5 top-1"
-            >
-                <primary-button>
-                    <Link :href="route('task.create')" class="btn btn-primary">
-                        Create New
-                    </Link>
-                </primary-button>
-                <primary-button>
-                    <Link :href="route('task.index')" class="btn btn-primary">
-                        View All
-                    </Link>
-                </primary-button>
-            </div>
-        </div>
-
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div
-                    class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg"
+                    class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg relative"
                 >
+                    <div class="flex justify-items-end my-5">
+                        <div class="absolute right-5 top-0">
+                            <primary-button>
+                                <Link
+                                    :href="route('task.create')"
+                                    class="btn btn-primary"
+                                >
+                                    Create New
+                                </Link>
+                            </primary-button>
+                        </div>
+                    </div>
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
@@ -51,6 +46,12 @@ defineProps({
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
                                     Name
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    Priority
                                 </th>
                                 <th
                                     scope="col"
@@ -84,14 +85,10 @@ defineProps({
                                         {{ task.name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <ul>
-                                            <li
-                                                v-for="project in task.projects"
-                                                :key="project.id"
-                                            >
-                                                {{ project?.name }}
-                                            </li>
-                                        </ul>
+                                        {{ task.priority }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        {{ task.project?.name }}
                                     </td>
                                     <td
                                         class="px-6 py-4 whitespace-nowrap flex gap-3"

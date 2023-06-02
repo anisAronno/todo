@@ -16,8 +16,8 @@ class Task extends Model
         return  $this->belongsTo(User::class);
     }
 
-    public function projects()
+    public function project()
     {
-        return $this->belongsToMany(Project::class)->withTimestamps();
+        return $this->belongsTo(Project::class);
     }
 }

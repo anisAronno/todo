@@ -20,31 +20,21 @@ defineProps({
                 Project
             </h2>
         </template>
-        <div class="sm:flex sm:items-center relative my-5">
-            <div
-                class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none space-x-1 sm:space-x-2 space-y-2 sm:space-y-0 absolute right-5 top-1"
-            >
-                <primary-button>
-                    <Link
-                        :href="route('project.create')"
-                        class="btn btn-primary"
-                    >
-                        Create New
-                    </Link>
-                </primary-button>
-                <primary-button>
-                    <Link
-                        :href="route('project.index')"
-                        class="btn btn-primary"
-                    >
-                        View All
-                    </Link>
-                </primary-button>
-            </div>
-        </div>
 
         <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 relative">
+                <div class="flex justify-items-end my-5 ">
+                    <div class=" absolute right-5 top-0">
+                        <primary-button>
+                            <Link
+                                :href="route('project.create')"
+                                class="btn btn-primary"
+                            >
+                                Create New
+                            </Link>
+                        </primary-button>
+                    </div>
+                </div>
                 <div
                     class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg"
                 >

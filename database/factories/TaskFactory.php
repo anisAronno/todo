@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,6 +21,7 @@ class TaskFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'priority' => $this->faker->randomNumber(),
+            'project_id' => Project::all(['id'])->random(),
             'user_id' => User::all(['id'])->random(),
         ];
     }

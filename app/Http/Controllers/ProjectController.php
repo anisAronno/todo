@@ -19,7 +19,7 @@ class ProjectController extends Controller
     {
         $user = Auth::user();
 
-        $projects = $user->projects;
+        $projects = $user->projects()->orderBy('created_at', 'desc')->get();
 
         return Inertia::render('Project/Index', [
             'projects' => $projects,
@@ -37,7 +37,7 @@ class ProjectController extends Controller
 
         $user->projects()->create($request->all());
 
-        return redirect()->route('projects.index')->with('status', 'Project created successfully.');
+        return redirect()->route('project.index')->with('status', 'Project created successfully.');
     }
 
     public function show(Project $project)
@@ -58,13 +58,13 @@ class ProjectController extends Controller
     {
         $project->update($request->all());
 
-        return redirect()->route('projects.index')->with('status', 'Project updated successfully.');
+        return redirect()->route('project.index')->with('status', 'Project updated successfully.');
     }
 
     public function destroy(Project $project)
     {
         $project->delete();
 
-        return redirect()->route('projects.index')->with('status', 'Project deleted successfully.');
+        return redirect()->route('project.index')->with('status', 'Project deleted successfully.');
     }
 }
