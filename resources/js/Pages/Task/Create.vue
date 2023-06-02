@@ -9,6 +9,7 @@ import Form from "./Form.vue";
 defineProps({
     projects: Object,
     task: Object,
+    max_priority: Number | String,
 });
 </script>
 
@@ -41,7 +42,7 @@ defineProps({
                             </primary-button>
                         </div>
                     </div>
-                    <Form :projects="projects" :task="task"></Form>
+                    <Form :projects="projects" :task="task" :max_priority="max_priority"></Form>
                 </div>
             </div>
         </div>

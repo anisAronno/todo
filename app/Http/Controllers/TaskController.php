@@ -41,6 +41,7 @@ class TaskController extends Controller
 
         return Inertia::render('Task/Create', [
             'projects' => $projects,
+            'max_priority' => ($user->tasks()->max('priority')+1) ?? 1
         ]);
     }
 

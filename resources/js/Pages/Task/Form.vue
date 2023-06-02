@@ -5,11 +5,12 @@ import { Head, useForm } from "@inertiajs/vue3";
 const props = defineProps({
     projects: Object,
     task: Object,
+    max_priority: Number | String,
 });
 
 const form = useForm({
     name: props.task?.name ?? "",
-    priority: props.task?.priority ?? "",
+    priority: props.task?.priority ?? props.max_priority,
     project_id: props.task?.project_id ?? "",
 });
 
